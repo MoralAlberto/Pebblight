@@ -10,6 +10,11 @@ import java.util.UUID;
 public final class Constants {
 
     /**
+     * The UUID for Pebblight.
+     */
+    public static final UUID PEBBLIGHT_UUID = UUID.fromString("b9152c98-067a-44e2-8ad2-9fb548d6c480");
+
+    /**
      * Intent broadcast by pebble.apk when a new connection to a Pebble is established.
      */
     public static final String INTENT_PEBBLE_CONNECTED = "com.getpebble.action.PEBBLE_CONNECTED";
@@ -68,16 +73,6 @@ public final class Constants {
     public static final String INTENT_APP_CUSTOMIZE = "com.getpebble.action.app.CONFIGURE";
 
     /**
-     * The UUID corresponding to Pebble's built-in "Sports" application.
-     */
-    public static final UUID SPORTS_UUID = UUID.fromString("4dab81a6-d2fc-458a-992c-7a1f3b96a970");
-
-    /**
-     * The UUID corresponding to Pebble's built-in "Golf" application.
-     */
-    public static final UUID GOLF_UUID = UUID.fromString("cf1e816a-9db0-4511-bbb8-f60c48ca8fac");
-
-    /**
      * The bundle-key used to store a message's transaction id.
      */
     public static final String TRANSACTION_ID = "transaction_id";
@@ -101,74 +96,6 @@ public final class Constants {
      * The bundle-key used to store the custom icon provided in a CUSTOMIZE intent.
      */
     public static final String CUST_ICON = "icon";
-
-    /**
-     * The PebbleDictionary key corresponding to the 'time' field sent to the Sports watch-app.
-     */
-    public static final int SPORTS_TIME_KEY = 0x00;
-    /**
-     * The PebbleDictionary key corresponding to the 'distance' field sent to the Sports watch-app.
-     */
-    public static final int SPORTS_DISTANCE_KEY = 0x01;
-    /**
-     * The PebbleDictionary key corresponding to the 'data' field sent to the Sports watch-app.
-     * The data field is paired with a variable label and can be used to display any data.
-     */
-    public static final int SPORTS_DATA_KEY = 0x02;
-    /**
-     * The PebbleDictionary key corresponding to the 'units' field sent to the Sports watch-app.
-     */
-    public static final int SPORTS_UNITS_KEY = 0x03;
-    /**
-     * The PebbleDictionary key corresponding to the 'state' field sent to the Sports watch-app. Both the watch and
-     * phone-app may modify this field. The phone-application is responsible for performing any required state
-     * transitions to stay in sync with the watch-app's state.
-     */
-    public static final int SPORTS_STATE_KEY = 0x04;
-    /**
-     * The PebbleDictionary key corresponding to the 'label' field sent to the Sports watch-app.
-     * The label field controls the label above the 'data' field.
-     */
-    public static final int SPORTS_LABEL_KEY = 0x05;
-
-    /**
-     * PebbleDictionary value corresponding to 'imperial' units.
-     */
-    public static final int SPORTS_UNITS_IMPERIAL = 0x00;
-    /**
-     * PebbleDictionary value corresponding to 'metric' units.
-     */
-    public static final int SPORTS_UNITS_METRIC = 0x01;
-    /**
-     * PebbleDictionary value corresponding to 'speed' data.
-     */
-    public static final int SPORTS_DATA_SPEED = 0x00;
-    /**
-     * PebbleDictionary value corresponding to 'pace' data.
-     */
-    public static final int SPORTS_DATA_PACE = 0x01;
-
-    public static final int SPORTS_STATE_INIT = 0x00;
-    public static final int SPORTS_STATE_RUNNING = 0x01;
-    public static final int SPORTS_STATE_PAUSED = 0x02;
-    public static final int SPORTS_STATE_END = 0x03;
-
-    public static final int GOLF_FRONT_KEY = 0x00;
-    public static final int GOLF_MID_KEY = 0x01;
-    public static final int GOLF_BACK_KEY = 0x02;
-    public static final int GOLF_HOLE_KEY = 0x03;
-    public static final int GOLF_PAR_KEY = 0x04;
-    public static final int GOLF_CMD_KEY = 0x05;
-
-    /**
-     * Command sent by the golf-application to display the next hole.
-     */
-    public static final int GOLF_CMD_PREV = 0x01;
-
-    /**
-     * Command sent by the golf-application to display the previous hole.
-     */
-    public static final int GOLF_CMD_NEXT = 0x02;
 
     private Constants() {
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
 /**
@@ -13,9 +14,10 @@ import android.util.Log;
  */
 public class LightService extends Service {
 
-    static boolean lightOn = false;
+    static boolean haveCamera = false;
     private Camera camera;
     private Camera.Parameters camParams;
+    PowerManager.WakeLock wl;
 
     public static final String ACTION_LIGHT = "com.albertomoral.pebblight.app.action.LIGHT";
     public static final String ACTION_LIGHT_STATUS = "com.albertomoral.pebblight.app.status";
@@ -27,8 +29,14 @@ public class LightService extends Service {
     }
 
     public LightService() {
-        camera = Camera.open();
-        camParams = camera.getParameters();
+    }
+
+    @Override
+    public void onCreate(){
+        // activate wake lock
+        PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+        wl.acquire(5000);
     }
 
     @Override
@@ -42,31 +50,52 @@ public class LightService extends Service {
                 return START_NOT_STICKY;
             }
 
+            if (!haveCamera) {
+                try {
+                    camera = Camera.open();
+                    camParams = camera.getParameters();
+                } catch (Exception e){
+                    return START_NOT_STICKY;
+                }
+            }
+
             if (camParams.getFlashMode().equals(Camera.Parameters.FLASH_MODE_TORCH)) {
 
-                Log.i("LightService", "torch is turn off!");
+                Log.i("LightService", "turning torch off!");
+
+                notifyActivity(false);
 
                 //boolean connected = PebbleKit.isWatchConnected(this.getApplicationContext());
                 //Log.e("LightService", "Pebble is " + (connected ? "connected" : "not connected"));
 
-                camParams.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                camera.setParameters(camParams);
-                camera.stopPreview();
-                lightOn = false;
+                if (camera != null) {
 
-                notifyActivity(false);
+                    camParams.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                    camera.setParameters(camParams);
+                    camera.stopPreview();
+                    // we need to release the camera here otherwise other application won't be able to use it.
+                    camera.release();
+
+                }
+
+                haveCamera = false;
+
 
             } else {
 
-                Log.i("LightService", "torch is turn on!");
-
-                camParams.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-
-                camera.setParameters(camParams);
-                camera.startPreview();
-                lightOn = true;
+                Log.i("LightService", "turning torch on!");
 
                 notifyActivity(true);
+
+                if (camera != null) {
+
+                    camParams.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+
+                    camera.setParameters(camParams);
+                    camera.startPreview();
+                }
+
+                haveCamera = true;
 
             }
 
@@ -88,9 +117,7 @@ public class LightService extends Service {
     public void onDestroy(){
         super.onDestroy();
 
-        if (!lightOn || camera != null) {
-            camera.release();
-        }
+        wl.release();
     }
 
     @Override

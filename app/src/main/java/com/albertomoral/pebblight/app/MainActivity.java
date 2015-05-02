@@ -25,7 +25,13 @@ public class MainActivity extends Activity {
     protected void onStop() {
         super.onStop();
 
-        unregisterReceiver(lightReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (lightReceiver!=null)
+            unregisterReceiver(lightReceiver);
     }
 
     @Override
